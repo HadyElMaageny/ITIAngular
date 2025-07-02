@@ -1,16 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../../../Models/IProduct';
+import { ICategory } from '../../../Models/ICategory';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ProductList',
   templateUrl: './ProductList.component.html',
   styleUrls: ['./ProductList.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule ]
 })
 export class ProductListComponent implements OnInit {
   prdList: IProduct[];
+  catList: ICategory[];
+  selectedCatID: number = 0;
   constructor() {
+    this.catList = [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+      { id: 3, name: 'Category 3' }
+    ];
     this.prdList = [
       {
         id: 1,

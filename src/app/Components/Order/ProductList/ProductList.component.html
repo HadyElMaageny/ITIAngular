@@ -1,9 +1,13 @@
-<select class="form-select" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+<div class="mb-3">
+  <label for="prdCat" class="form-label">Category</label>
+  <select class="form-select" name="Cat" id="prdCat" [(ngModel)]="selectedCatID">
+  <option *ngFor="let category of catList" [value]="category.id">{{ category.name }}</option>
 </select>
+</div>
+
+<div class="text-secondary">
+{{selectedCatID}}
+</div>
 <table class="table table-striped">
   <thead>
     <tr>

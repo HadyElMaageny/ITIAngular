@@ -1,5 +1,0 @@
-{
-  "css.classCompletion.includeGlobPattern": "**/*.css",
-  "css.classCompletion.excludeGlobPattern": "",
-  "html-css-class-completion.includeGlobPattern": "**/node_modules/bootstrap/**/*.css"
-}
