@@ -1,12 +1,20 @@
 <div class="mb-3">
   <label for="prdCat" class="form-label">Category</label>
-  <select class="form-select" name="Cat" id="prdCat" [(ngModel)]="selectedCatID">
-  <option *ngFor="let category of catList" [value]="category.id">{{ category.name }}</option>
-</select>
+  <select
+    class="form-select"
+    name="Cat"
+    id="prdCat"
+    [(ngModel)]="selectedCatID"
+  >
+    <option [ngValue]="0">All</option>
+    <option *ngFor="let category of catList" [ngValue]="category.id">
+      {{ category.name }}
+    </option>
+  </select>
 </div>
 
 <div class="text-secondary">
-{{selectedCatID}}
+  {{ selectedCatID }}
 </div>
 <table class="table table-striped">
   <thead>
@@ -20,20 +28,42 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of prdList; let i = index">
+    <tr *ngFor="let product of prdList; let i = index" [class.bg-warning]="+product.quantity < 3">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ product.name }}</td>
       <td>{{ product.price }}</td>
-      <td>{{ product.quantity }}</td>
       <td>
-        <img [src]="product.imageUrl" alt="{{ product.name }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+        <ng-container [ngSwitch]="product.quantity">
+          <div *ngSwitchCase="0" class="text-danger">Out of Stock</div>
+          <div *ngSwitchCase="1" class="text-warning">Only 1 left</div>
+          <div *ngSwitchCase="2" class="text-warning">Only 2 left</div>
+          <div *ngSwitchDefault>{{ product.quantity }}</div>
+        </ng-container>
+      </td>
+      <td>
+        <img
+          [src]="product.imageUrl"
+          alt="{{ product.name }}"
+          class="img-thumbnail"
+          style="width: 50px; height: 50px"
+        />
       </td>
       <td>{{ product.categoryID }}</td>
       <td>
-        <input #ItemsCount type="number" class="form-control" style="width: 80px;">
+        <input
+          #ItemsCount
+          type="number"
+          class="form-control"
+          style="width: 80px"
+        />
       </td>
       <td>
-        <button class="btn btn-primary" (click)="buy(product.id, ItemsCount.value)">Add to Cart</button>
+        <button
+          class="btn btn-primary"
+          (click)="buy(product.id, ItemsCount.value)"
+        >
+          Add to Cart
+        </button>
       </td>
     </tr>
   </tbody>
