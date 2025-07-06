@@ -1,37 +1,22 @@
-<div class="mb-3">
-  <label for="prdCat" class="form-label">Category</label>
-  <select
-    class="form-select"
-    name="Cat"
-    id="prdCat"
-    [(ngModel)]="selectedCatID"
-  >
-    <option [ngValue]="0">All</option>
-    <option *ngFor="let category of catList" [ngValue]="category.id">
-      {{ category.name }}
-    </option>
-  </select>
-</div>
-
-<div class="text-secondary">
-  {{ selectedCatID }}
-</div>
 <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Price in USD</th>
+      <th scope="col">Price in EGP</th>
       <th scope="col">Quantity</th>
       <th scope="col">Image</th>
       <th scope="col">Category ID</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of prdList; let i = index" [class.bg-warning]="+product.quantity < 3">
+    <tr *ngFor="let product of prdListOfCat ;
+     let i = index" [class.bg-warning]="+product.quantity < 3">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ product.name }}</td>
-      <td>{{ product.price }}</td>
+      <td>{{ product.price | currency:'USD' }}</td>
+      <td>{{ product.price | USDToEGP:10 |currency:'EGP' }}</td>
       <td>
         <ng-container [ngSwitch]="product.quantity">
           <div *ngSwitchCase="0" class="text-danger">Out of Stock</div>
@@ -42,10 +27,10 @@
       </td>
       <td>
         <img
+          lightBox="red" defaultColor="grey"
           [src]="product.imageUrl"
           alt="{{ product.name }}"
           class="img-thumbnail"
-          style="width: 50px; height: 50px"
         />
       </td>
       <td>{{ product.categoryID }}</td>
@@ -60,7 +45,7 @@
       <td>
         <button
           class="btn btn-primary"
-          (click)="buy(product.id, ItemsCount.value)"
+          (click)="buy(product.price, ItemsCount.value)"
         >
           Add to Cart
         </button>
@@ -68,3 +53,8 @@
     </tr>
   </tbody>
 </table>
+<!-- <h3 class="text-danger">
+  [to be removed]: for testing purposes only<br>
+  orderDate: {{ orderDate | date:'short' }}<br>
+  orderTotalPrice: {{ orderTotalPrice | currency:'USD' }}
+</h3> -->

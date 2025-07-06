@@ -1,30 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, input, OnChanges, OnInit, Output, output, SimpleChanges } from '@angular/core';
 import { IProduct } from '../../../Models/IProduct';
 import { ICategory } from '../../../Models/ICategory';
 import { FormsModule } from '@angular/forms';
+import { LightBoxDirective } from '../../../Directives/LightBox.directive';
+import { USDToEGPPipe } from '../../../Pipes/USDToEGP.pipe';
 
 @Component({
   selector: 'app-ProductList',
   templateUrl: './ProductList.component.html',
   styleUrls: ['./ProductList.component.css'],
-  imports: [CommonModule, FormsModule ]
+  imports: [CommonModule, FormsModule, LightBoxDirective, USDToEGPPipe ]
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnChanges {
   prdList: IProduct[];
-  catList: ICategory[];
-  selectedCatID: number = 0;
+  prdListOfCat: IProduct[] = [];
+  orderTotalPrice: number = 0;
+  @Input() sentCatID: number = 0;
+  @Output() totalPriceChanged: EventEmitter<number>;
+  orderDate: Date = new Date();
   constructor() {
-    this.catList = [
-      { id: 1, name: 'Category 1' },
-      { id: 2, name: 'Category 2' },
-      { id: 3, name: 'Category 3' }
-    ];
+    this.totalPriceChanged = new EventEmitter<number>();
     this.prdList = [
       {
         id: 1,
         name: 'Product 1',
-        price: 100,
+        price: 1000000,
         quantity: 1,
         imageUrl: 'https://picsum.photos/200/300',
         categoryID: 1
@@ -32,7 +33,7 @@ export class ProductListComponent implements OnInit {
       {
         id: 2,
         name: 'Product 2',
-        price: 200,
+        price: 2000000,
         quantity: 20,
         imageUrl: 'https://picsum.photos/200/300',
         categoryID: 2
@@ -40,7 +41,7 @@ export class ProductListComponent implements OnInit {
       {
         id: 3,
         name: 'Product 3',
-        price: 300,
+        price: 3000000000,
         quantity: 1,
         imageUrl: 'https://picsum.photos/200/300',
         categoryID: 3
@@ -48,7 +49,7 @@ export class ProductListComponent implements OnInit {
       {
         id: 4,
         name: 'Product 4',
-        price: 400,
+        price: 40000000,
         quantity: 0,
         imageUrl: 'https://picsum.photos/200/300',
         categoryID: 1
@@ -118,20 +119,37 @@ export class ProductListComponent implements OnInit {
         categoryID: 3
       }
     ];
+    this.orderDate = new Date();
+    this.prdListOfCat = this.prdList;
   }
 
-  buy(prodID: number, itemsCount: any) {
-    const product = this.prdList.find(p => p.id === prodID);
-    if (product) {
-      product.quantity -= Number(itemsCount);
-    }
+  buy(prdPrice: number, count:string) {
+    // const product = this.prdList.find(p => p.id === prodID);
+    // if (product) {
+    //   product.quantity -= Number(itemsCount);
+    // }
+    this.orderTotalPrice += +count * prdPrice;
+    this.totalPriceChanged.emit(this.orderTotalPrice);
   }
 
   prdTrackByfn(index: number, item: IProduct): number {
     return item.id;
   }
 
+  private filterProdByCat()
+  {
+    if (this.sentCatID === 0) {
+      this.prdListOfCat = this.prdList;
+    } else {
+      this.prdListOfCat = this.prdList.filter(p => p.categoryID === this.sentCatID);
+    }
+  }
+
   ngOnInit() {
+  }
+
+  ngOnChanges(): void {
+      this.filterProdByCat();
   }
 
 }
