@@ -16,4 +16,15 @@
 <hr>
 <app-ProductList [sentCatID]="selectedCatID" (totalPriceChanged)="onTotalPriceChanged($event)"></app-ProductList>
 <hr>
+<div>
+  <h3>
+    Enter Your Name
+  </h3>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter your name"
+    #customerNameInput
+  />
+</div>
 <h3>Order Total Price: {{recievedOrderTotalPrice}}</h3>
