@@ -36,7 +36,6 @@ export class OrderMasterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.clientNameInputElement.nativeElement.value = 'Default Client Name';
     this.clientNameInputElement.nativeElement.style = 'background-color: yellow; color: red; font-size: 20px; font-weight: bold;';
-    console.log(this.productListComponent.prdList);
   }
 
 }

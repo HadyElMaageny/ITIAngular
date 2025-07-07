@@ -1,7 +1,6 @@
+import { IProduct } from './../../../Models/IProduct';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, input, OnChanges, OnInit, Output, output, SimpleChanges } from '@angular/core';
-import { IProduct } from '../../../Models/IProduct';
-import { ICategory } from '../../../Models/ICategory';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LightBoxDirective } from '../../../Directives/LightBox.directive';
 import { USDToEGPPipe } from '../../../Pipes/USDToEGP.pipe';
@@ -123,12 +122,13 @@ export class ProductListComponent implements OnInit, OnChanges {
     this.prdListOfCat = this.prdList;
   }
 
-  buy(prdPrice: number, count:string) {
+  buy(product: IProduct, count: number): void {
     // const product = this.prdList.find(p => p.id === prodID);
     // if (product) {
     //   product.quantity -= Number(itemsCount);
     // }
-    this.orderTotalPrice += +count * prdPrice;
+    this.orderTotalPrice += +count * product.price;
+    product.quantity -= +count;
     this.totalPriceChanged.emit(this.orderTotalPrice);
   }
 
