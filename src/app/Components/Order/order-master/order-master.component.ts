@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
-import { ICategory } from '../../../Models/ICategory';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ProductListComponent } from "../ProductList/ProductList.component";
+import {Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {ICategory} from '../../../Models/ICategory';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {ProductListComponent} from "../ProductList/ProductList.component";
+import {ShoppingCartItem} from '../../../ViewModels/shopping-cart-item';
 
 @Component({
   selector: 'app-order-master',
@@ -15,27 +16,70 @@ import { ProductListComponent } from "../ProductList/ProductList.component";
 export class OrderMasterComponent implements OnInit, AfterViewInit {
   catList: ICategory[];
   selectedCatID: number = 0;
-  recievedOrderTotalPrice: number = 0;
-  @ViewChild('customerNameInput') clientNameInputElement!: ElementRef;
-  @ViewChild(ProductListComponent) productListComponent!: ProductListComponent;
+  totalPrice: number = 0;
+  taxValue: number = 0;
+  shoppingCartItems: ShoppingCartItem[] = [];
+  @ViewChild(ProductListComponent) productListComp!: ProductListComponent;
+  @ViewChild('categorySelector') categorySelectRef!: ElementRef;
+
   constructor() {
     this.catList = [
-      { id: 1, name: 'Category 1' },
-      { id: 2, name: 'Category 2' },
-      { id: 3, name: 'Category 3' }
+      {id: 1, name: 'Category 1'},
+      {id: 2, name: 'Category 2'},
+      {id: 3, name: 'Category 3'}
     ];
   }
+
+  confirmOrder(): void {
+    // Access child component instance
+    console.log('Accessing child component using ViewChild...');
+
+    const date = this.productListComp.orderDate;
+    const products = this.productListComp.prdListOfCat[0];
+
+    console.log('Child Order Date:', date);
+    console.log('Child Filtered Products:', products);
+  }
+
+  onItemAdded(newItem: ShoppingCartItem): void {
+    const existingItem = this.shoppingCartItems.find(item => item.productID === newItem.productID);
+    if (existingItem) {
+      existingItem.selectedQuantity += newItem.selectedQuantity;
+    } else {
+      this.shoppingCartItems.push({...newItem});
+    }
+
+    this.calculateTotal();
+  }
+
+
+  calculateTotal(): void {
+    this.totalPrice = this.shoppingCartItems.reduce(
+      (sum, item) => sum + item.unitPrice * item.selectedQuantity, 0
+    );
+    this.taxValue = this.totalPrice * 0.14;
+  }
+
+
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 
-  onTotalPriceChanged(orderTotalPrice: number) {
-    this.recievedOrderTotalPrice = orderTotalPrice;
-  }
+  // onTotalPriceChanged(orderTotalPrice: number) {
+  //   this.receivedOrderTotalPrice = orderTotalPrice;
+  // }
 
-  ngAfterViewInit() {
-    this.clientNameInputElement.nativeElement.value = 'Default Client Name';
-    this.clientNameInputElement.nativeElement.style = 'background-color: yellow; color: red; font-size: 20px; font-weight: bold;';
-  }
+  ngAfterViewInit(): void {
+    // ✅ a. Access the value
+    const selectedValue = this.categorySelectRef.nativeElement.value;
+    // console.log('Selected Category Value:', selectedValue);
 
+    // ✅ b. Change the style
+    this.categorySelectRef.nativeElement.style.backgroundColor = 'lightblue';
+    this.categorySelectRef.nativeElement.style.color = 'white';
+    this.categorySelectRef.nativeElement.style.fontWeight = 'bold';
+
+    this.categorySelectRef.nativeElement.value = '2'; // This selects "Category 2"
+    // console.log('Selected Category Value:', selectedValue);
+  }
 }

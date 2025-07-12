@@ -2,29 +2,62 @@
 <div class="mb-3">
   <label for="prdCat" class="form-label">Category</label>
   <select
+    #categorySelector
     class="form-select"
     name="Cat"
     id="prdCat"
     [(ngModel)]="selectedCatID"
   >
-    <option [ngValue]="0">All</option>
+    <option [ngValue]="0" selected>All</option>
     <option *ngFor="let category of catList" [ngValue]="category.id">
       {{ category.name }}
     </option>
   </select>
 </div>
 <hr>
-<app-ProductList [sentCatID]="selectedCatID" (totalPriceChanged)="onTotalPriceChanged($event)"></app-ProductList>
+<app-ProductList
+  [sentCatID]="selectedCatID"
+  (itemAddedToCart)="onItemAdded($event)">
+</app-ProductList>
+
 <hr>
-<div>
-  <h3>
-    Enter Your Name
-  </h3>
-  <input
-    type="text"
-    class="form-control"
-    placeholder="Enter your name"
-    #customerNameInput
-  />
-</div>
-<h3>Order Total Price: {{recievedOrderTotalPrice}}</h3>
+<h3>🛒 Shopping Cart</h3>
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Product Name</th>
+    <th>Unit Price</th>
+    <th>Quantity</th>
+    <th>Total</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of shoppingCartItems; let i = index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ item.productName }}</td>
+    <td>{{ item.unitPrice | currency:'USD' }}</td>
+    <td>{{ item.selectedQuantity }}</td>
+    <td>{{ item.unitPrice * item.selectedQuantity | currency:'USD' }}</td>
+  </tr>
+  </tbody>
+</table>
+
+<h4>Total: {{ totalPrice | currency:'USD' }}</h4>
+<h4>Tax (14%): {{ taxValue | currency:'USD' }}</h4>
+
+<button class="btn btn-success mt-3" (click)="confirmOrder()">Confirm</button>
+
+
+<!--<div>-->
+<!--  <h3>-->
+<!--    Enter Your Name-->
+<!--  </h3>-->
+<!--  <input-->
+<!--    type="text"-->
+<!--    class="form-control"-->
+<!--    placeholder="Enter your name"-->
+<!--    #customerNameInput-->
+<!--  />-->
+<!--</div>-->
+<!--<h3>Order Total Price: {{totalPrice}}</h3>-->
