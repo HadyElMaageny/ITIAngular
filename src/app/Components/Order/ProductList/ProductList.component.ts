@@ -6,12 +6,13 @@ import {LightBoxDirective} from '../../../Directives/LightBox.directive';
 import {USDToEGPPipe} from '../../../Pipes/USDToEGP.pipe';
 import {ShoppingCartItem} from '../../../ViewModels/shopping-cart-item';
 import {StaticProductService} from '../../../Services/static-product.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-ProductList',
   templateUrl: './ProductList.component.html',
   styleUrls: ['./ProductList.component.css'],
-  imports: [CommonModule, FormsModule, LightBoxDirective, USDToEGPPipe]
+  imports: [CommonModule, FormsModule, LightBoxDirective, USDToEGPPipe, RouterLink]
 })
 export class ProductListComponent implements OnInit, OnChanges {
   prdListOfCat: IProduct[] = [];
@@ -70,6 +71,7 @@ export class ProductListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.prdListOfCat = this.staticProductService.getAllProducts();
   }
 
   ngOnChanges(): void {

@@ -9,7 +9,7 @@ import { OrderMasterComponent } from "./Components/Order/order-master/order-mast
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Footer, Sidebar, OrderMasterComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
