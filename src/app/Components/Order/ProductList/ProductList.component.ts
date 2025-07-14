@@ -79,4 +79,8 @@ export class ProductListComponent implements OnInit, OnChanges {
     this.prdListOfCat = this.staticProductService.filterProdByCat(this.sentCatID);
   }
 
+  getPreviousProduct() {
+
+  }
+
 }

@@ -1,15 +1,20 @@
 <div class="card" style="width: 18rem;">
   <img class="card-img-top" [src]="prd?.imageUrl" alt="Card image cap" width="200" height="100">
   <div class="card-body">
-    <h5 class="card-title">{{ prd?.name}}</h5>
+    <h5 class="card-title">{{ prd?.name }}</h5>
     <div>
       <div>
-        Price: {{ prd?.price}}
+        Price: {{ prd?.price }}
       </div>
       <div>
-        Qty: {{ prd?.quantity}}
+        Qty: {{ prd?.quantity }}
       </div>
     </div>
-    <button class="btn btn-secondary" (click)="goBack()">Go Back to Products</button>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button [disabled]="receivedPrdId==prdIDsList[0]" type="button" class="btn btn-outline-primary" (click)="getPreviousProduct(prd?.id)">Previous</button>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Go Back</button>
+      <button [disabled]="receivedPrdId==prdIDsList[prdIDsList.length - 1]" type="button" class="btn btn-success" (click)="getNextProduct(prd?.id)">Next</button>
+    </div>
+    <!--    <button class="btn btn-secondary" (click)="goBack()">Go Back to Products</button>-->
   </div>
 </div>
