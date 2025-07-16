@@ -23,7 +23,6 @@ export class ProductListComponent implements OnInit, OnChanges {
   orderDate: Date = new Date();
 
   constructor(private staticProductService: StaticProductService) {
-    console.log("HERE" + staticProductService.getAllProducts());
     this.totalPriceChanged = new EventEmitter<number>();
     this.orderDate = new Date();
   }

@@ -32,13 +32,9 @@ export class OrderMasterComponent implements OnInit, AfterViewInit {
 
   confirmOrder(): void {
     // Access child component instance
-    console.log('Accessing child component using ViewChild...');
 
     const date = this.productListComp.orderDate;
     const products = this.productListComp.prdListOfCat[0];
-
-    console.log('Child Order Date:', date);
-    console.log('Child Filtered Products:', products);
   }
 
   onItemAdded(newItem: ShoppingCartItem): void {
