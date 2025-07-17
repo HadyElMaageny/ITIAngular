@@ -11,7 +11,7 @@ import {PromotionAdsService} from '../../Services/promotion-ads.service';
   styleUrl: './home.scss'
 })
 export class Home implements OnInit, OnDestroy {
-  subscription!: Subscription;
+  subscriptions!: Subscription [];
   storeInfo: StoreData;
   isShowingImage = true;
 
@@ -24,7 +24,7 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.promAds.getScheduledAds(3).subscribe({
+    this.subscriptions.push(this.promAds.getScheduledAds(3).subscribe({
       next: (data: string) => {
         console.log(data);
       },
@@ -34,7 +34,7 @@ export class Home implements OnInit, OnDestroy {
       complete: () => {
         console.log("completed");
       }
-    });
+    }));
   }
 
   toggleImage() {
@@ -42,7 +42,9 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    for (let subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }
