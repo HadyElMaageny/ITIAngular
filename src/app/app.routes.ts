@@ -6,6 +6,7 @@ import {OrderMasterComponent} from './Components/Order/order-master/order-master
 import {UserLogin} from './Components/user-login/user-login';
 import {MainLayout} from './Components/main-layout/main-layout';
 import {NotFound} from './Components/not-found/not-found';
+import {ParentComponent} from './Components/parent-component/parent-component';
 
 export const routes: Routes = [
   {path: '', component: MainLayout, children: [
@@ -16,5 +17,6 @@ export const routes: Routes = [
       {path: 'orders', component: OrderMasterComponent},
     ]},
   {path: 'login', component: UserLogin},
+  {path: 'parent', component: ParentComponent},
   {path: '**', component: NotFound},
 ];

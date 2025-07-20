@@ -17,7 +17,7 @@ export class Home implements OnInit, OnDestroy {
 
   constructor(private promAds: PromotionAdsService) {
     this.storeInfo = new StoreData(
-      'ITIAngular',
+      'FE',
       'https://picsum.photos/400/200',
       ['Branch 1', 'Branch 2', 'Branch 3']
     );
