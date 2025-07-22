@@ -7,6 +7,7 @@ import {USDToEGPPipe} from '../../../Pipes/USDToEGP.pipe';
 import {ShoppingCartItem} from '../../../ViewModels/shopping-cart-item';
 import {StaticProductService} from '../../../Services/static-product.service';
 import {RouterLink} from '@angular/router';
+import {ProductsService} from '../../../Services/products.service';
 
 @Component({
   selector: 'app-ProductList',
@@ -22,7 +23,7 @@ export class ProductListComponent implements OnInit, OnChanges {
   @Output() itemAddedToCart: EventEmitter<ShoppingCartItem> = new EventEmitter();
   orderDate: Date = new Date();
 
-  constructor(private staticProductService: StaticProductService) {
+  constructor(private productService: ProductsService) {
     this.totalPriceChanged = new EventEmitter<number>();
     this.orderDate = new Date();
   }
@@ -66,16 +67,23 @@ export class ProductListComponent implements OnInit, OnChanges {
   }
 
   private filterProdByCat() {
-    // this.prdList = this.staticProductService.filterProdByCat(this.sentCatID);
+    // this.prdList = this.productService.filterProdByCat(this.sentCatID);
   }
 
   ngOnInit() {
-    this.prdListOfCat = this.staticProductService.getAllProducts();
+    // this.prdListOfCat = this.productService.getAllProducts();
+    this.productService.getAllProducts().subscribe(products => {
+      this.prdListOfCat = products;
+    })
+
   }
 
   ngOnChanges(): void {
     // this.filterProdByCat();
-    this.prdListOfCat = this.staticProductService.filterProdByCat(this.sentCatID);
+    // this.prdListOfCat = this.productService.filterProdByCat(this.sentCatID);
+    this.productService.getProductsByCatID(this.sentCatID).subscribe(products => {
+      this.prdListOfCat = products;
+    })
   }
 
   getPreviousProduct() {

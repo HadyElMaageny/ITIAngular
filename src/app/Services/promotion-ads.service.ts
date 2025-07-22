@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {from, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class PromotionAdsService {
       "Black Friday",
       "White Friday",
       "Discount",
-      "",
-      "Sale UP"
+      // "",
+      "Sale UP and White Friday",
     ];
   }
 
@@ -43,4 +43,9 @@ export class PromotionAdsService {
       }
     })
   }
+  getSerialAds(): Observable<string>
+  {
+    return from(this.adsList);
+  }
+
 }

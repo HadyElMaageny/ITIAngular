@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreData} from '../../ViewModels/store-data';
-import {combineLatestAll, Subscription} from 'rxjs';
+import {combineLatestAll, filter, first, map, Subscription} from 'rxjs';
 import {PromotionAdsService} from '../../Services/promotion-ads.service';
 
 @Component({
@@ -11,7 +11,7 @@ import {PromotionAdsService} from '../../Services/promotion-ads.service';
   styleUrl: './home.scss'
 })
 export class Home implements OnInit, OnDestroy {
-  subscriptions!: Subscription [];
+  subscriptions: Subscription[] = []; // ✅ Fix: initialize the array
   storeInfo: StoreData;
   isShowingImage = true;
 
@@ -24,7 +24,7 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.promAds.getScheduledAds(3).subscribe({
+    let observer = {
       next: (data: string) => {
         console.log(data);
       },
@@ -34,7 +34,20 @@ export class Home implements OnInit, OnDestroy {
       complete: () => {
         console.log("completed");
       }
-    }));
+    };
+    let filteredObservable = this.promAds.getScheduledAds(3).pipe(
+      filter(ad => ad.includes("White Friday")),
+      map(ad => "Ad: " + ad),
+    )
+    let adsSubscriptions = filteredObservable.subscribe(observer);
+    this.subscriptions.push(adsSubscriptions);
+
+    // Optional second subscription
+    // this.subscriptions.push(
+    //   this.promAds.getSerialAds().subscribe(ad => {
+    //     console.log(ad);
+    //   })
+    // );
   }
 
   toggleImage() {
@@ -46,5 +59,4 @@ export class Home implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
-
 }
