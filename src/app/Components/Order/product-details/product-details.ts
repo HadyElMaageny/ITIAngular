@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {IProduct} from '../../../Models/IProduct';
-import {StaticProductService} from '../../../Services/static-product.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {disableDebugTools} from '@angular/platform-browser';
+import {ProductsService} from '../../../Services/products.service';
 
 @Component({
   selector: 'app-product-details',
@@ -16,22 +15,26 @@ export class ProductDetails implements OnInit {
   prd: IProduct | undefined = {} as IProduct;
   prdIDsList: number[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private staticProductService: StaticProductService, private location: Location, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private ProductService: ProductsService, private location: Location, private router: Router) {
   }
 
   ngOnInit() {
     // this.receivedPrdId = this.activatedRoute.snapshot.params['id'];
     this.activatedRoute.paramMap.subscribe(params => {
       this.receivedPrdId = Number(params.get('id'));
-      this.prd = this.staticProductService.getProdById(this.receivedPrdId);
+      this.ProductService.getProductById(this.receivedPrdId).subscribe((product: IProduct) => {
+        this.prd = product;
+      });
     })
-    this.prdIDsList = this.staticProductService.getAllProducts().map((product) => product.id);
+    // this.prdIDsList = this.ProductService.getAllProducts().map((product) => product.id);
   }
 
   getPreviousProduct(pId?: number) {
     let currentIndex = this.prdIDsList.findIndex(prdId => prdId === pId);
     if (currentIndex > 0) {
-      this.prd = this.staticProductService.getProdById(this.prdIDsList[currentIndex - 1]);
+      this.ProductService.getProductById(this.prdIDsList[currentIndex - 1]).subscribe((product: IProduct) => {
+        this.prd = product;
+      });
       this.router.navigate(['/products', this.prd?.id]);
     }
   }
@@ -43,7 +46,9 @@ export class ProductDetails implements OnInit {
   getNextProduct(pId?: number) {
     let currentIndex = this.prdIDsList.findIndex(prdId => prdId === pId);
     if (currentIndex < this.prdIDsList.length - 1) {
-      this.prd = this.staticProductService.getProdById(this.prdIDsList[currentIndex + 1]);
+      this.ProductService.getProductById(this.prdIDsList[currentIndex + 1]).subscribe((product: IProduct) => {
+        this.prd = product;
+      });
       this.router.navigate(['/products', this.prd?.id]);
     }
   }

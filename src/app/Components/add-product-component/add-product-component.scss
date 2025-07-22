@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+
+.add-product-container {
+  padding: 20px;
+
+  button {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// ✅ Use built-in Material CSS variables
+.success-snackbar {
+  --mdc-snackbar-container-color: var(--mdc-theme-success, #4caf50);
+  --mat-mdc-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: var(--mdc-theme-error, #f44336);
+  --mat-mdc-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}

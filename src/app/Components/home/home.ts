@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreData} from '../../ViewModels/store-data';
-import {combineLatestAll, filter, first, map, Subscription} from 'rxjs';
+import {filter, map, Subscription} from 'rxjs';
 import {PromotionAdsService} from '../../Services/promotion-ads.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class Home implements OnInit, OnDestroy {
 
   constructor(private promAds: PromotionAdsService) {
     this.storeInfo = new StoreData(
-      'ITIAngular',
+      'FE',
       'https://picsum.photos/400/200',
       ['Branch 1', 'Branch 2', 'Branch 3']
     );

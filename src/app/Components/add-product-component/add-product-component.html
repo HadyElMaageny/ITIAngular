@@ -1,0 +1,11 @@
+<div class="add-product-container">
+  <button mat-raised-button
+          color="primary"
+          (click)="addProduct()"
+          [disabled]="isLoading">
+    <span *ngIf="!isLoading">Add Sample Product</span>
+    <span *ngIf="isLoading">
+      <mat-spinner diameter="20"></mat-spinner> Adding...
+    </span>
+  </button>
+</div>
