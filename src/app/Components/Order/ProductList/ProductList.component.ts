@@ -81,9 +81,9 @@ export class ProductListComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     // this.filterProdByCat();
     // this.prdListOfCat = this.productService.filterProdByCat(this.sentCatID);
-    this.productService.getProductsByCatID(this.sentCatID).subscribe(products => {
-      this.prdListOfCat = products;
-    })
+    // this.productService.getProductsByCatID(this.sentCatID).subscribe(products => {
+    //   this.prdListOfCat = products;
+    // })
   }
 
   getPreviousProduct() {

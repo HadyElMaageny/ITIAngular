@@ -1,11 +1,10 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {map, Observable, retry, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {IProduct} from '../Models/IProduct';
-import {GenericAPIHandler} from './generic-apihandler';
 import {APIResponseVm} from '../ViewModels/apiresponse-vm';
+import {Observable, retry, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {IProduct} from '../Models/IProduct';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -13,56 +12,21 @@ const httpOptions = {
     // Authorization: 'my-auth-token'
   })
 };
+const apiUrl: string = environment.API_URL;
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
-  private readonly apiUrl: string = environment.API_URL;
+export class GenericAPIHandler {
 
-  constructor(private http: HttpClient, private genericApiHandler: GenericAPIHandler) {
-  }
 
-  getAllProducts(): Observable<IProduct[]> {
-    // return this.genericApiHandler.getAll('/products').pipe(
-    //   map((response: APIResponseVm) => response.data)
-    // );
-    return this.http.get<IProduct[]>(`${this.apiUrl}/products`)
-      .pipe(
-        catchError(this.handleError<IProduct[]>('getAllProducts'))
-      );
-  }
+  constructor(private http: HttpClient) { }
 
-  getProductById(id: number): Observable<IProduct> {
-    return this.http.get<IProduct>(`${this.apiUrl}/products/${id}`)
-      .pipe(
-        catchError(this.handleError<IProduct>('getProductById'))
-      );
-  }
-
-  getProductsByCatID(catID: number): Observable<IProduct[]> {
-    return this.http.get<IProduct[]>(`${this.apiUrl}/products?categoryID=${catID}`)
-      .pipe(
-        catchError(this.handleError<IProduct[]>('getProductsByCatID'))
-      );
-  }
-
-  addProduct(newPrd: IProduct): Observable<IProduct> {
-    return this.http.post<IProduct>(`${this.apiUrl}/products`, JSON.stringify(newPrd), httpOptions)
-      .pipe(
-        retry(3),
-        catchError(this.handleError<IProduct>('addProduct'))
-      );
-  }
-
-  // updateProduct(id: number, updatedPrd: IProduct) {
-  // }
-
-  // deleteProduct(id: number) {
-  // }
-
-  private setHeader(key: string, value: string) {
-    httpOptions.headers.set(key, value);
+  getAll(apiRoute: string): Observable<APIResponseVm> {
+    return this.http.get<APIResponseVm>(`${apiUrl}/${apiRoute}`).pipe(
+      retry(3),
+      catchError(this.handleError<APIResponseVm>('getAll ' + apiRoute))
+    );
   }
 
   private handleError<T>(operation = 'operation') {

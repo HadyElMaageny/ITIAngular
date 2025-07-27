@@ -1,11 +1,27 @@
-<div class="add-product-container">
-  <button mat-raised-button
-          color="primary"
-          (click)="addProduct()"
-          [disabled]="isLoading">
-    <span *ngIf="!isLoading">Add Sample Product</span>
-    <span *ngIf="isLoading">
-      <mat-spinner diameter="20"></mat-spinner> Adding...
-    </span>
-  </button>
-</div>
+<!--<div class="add-product-container">-->
+<!--  <button mat-raised-button-->
+<!--          color="primary"-->
+<!--          (click)="addProduct()"-->
+<!--          [disabled]="isLoading">-->
+<!--    <span *ngIf="!isLoading">Add Sample Product</span>-->
+<!--    <span *ngIf="isLoading">-->
+<!--      <mat-spinner diameter="20"></mat-spinner> Adding...-->
+<!--    </span>-->
+<!--  </button>-->
+<!--</div>-->
+
+<form>
+  <div class="form-group">
+    <label for="prdName">Email address</label>
+    <input type="text" class="form-control" id="prdName" placeholder="Enter Product Name">
+  </div>
+  <div class="form-group">
+    <label for="prdPrice">Email address</label>
+    <input type="number" class="form-control" id="prdPrice" placeholder="Enter Product Price">
+  </div>
+  <div class="form-group">
+    <label for="prdQty">Email address</label>
+    <input type="number" class="form-control" id="prdPrice" placeholder="Enter Product Price">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
