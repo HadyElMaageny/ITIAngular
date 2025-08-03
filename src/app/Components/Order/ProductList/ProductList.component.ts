@@ -52,6 +52,8 @@ export class ProductListComponent implements OnInit, OnChanges {
   }
 
 
+
+
   buy(product: IProduct, count: number): void {
     // const product = this.prdList.find(p => p.id === prodID);
     // if (product) {
@@ -62,9 +64,9 @@ export class ProductListComponent implements OnInit, OnChanges {
     this.totalPriceChanged.emit(this.orderTotalPrice);
   }
 
-  prdTrackByfn(index: number, item: IProduct): number {
-    return item.id;
-  }
+  // prdTrackByfn(index: number, item: IProduct): number {
+  //   return item.id;
+  // }
 
   private filterProdByCat() {
     // this.prdList = this.productService.filterProdByCat(this.sentCatID);
@@ -75,7 +77,10 @@ export class ProductListComponent implements OnInit, OnChanges {
     this.productService.getAllProducts().subscribe(products => {
       this.prdListOfCat = products;
     })
+  }
 
+  deleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe()
   }
 
   ngOnChanges(): void {

@@ -4,7 +4,7 @@ import {map, Observable, retry, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {IProduct} from '../Models/IProduct';
-import {GenericAPIHandler} from './generic-apihandler';
+import {GenericAPIService} from './generic-a-p-i.service';
 import {APIResponseVm} from '../ViewModels/apiresponse-vm';
 
 const httpOptions = {
@@ -18,47 +18,52 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ProductsService {
-  private readonly apiUrl: string = environment.API_URL;
+  private readonly route = 'products';
 
-  constructor(private http: HttpClient, private genericApiHandler: GenericAPIHandler) {
+  constructor(private http: HttpClient, private genericApiService: GenericAPIService) {
   }
 
   getAllProducts(): Observable<IProduct[]> {
-    // return this.genericApiHandler.getAll('/products').pipe(
-    //   map((response: APIResponseVm) => response.data)
-    // );
-    return this.http.get<IProduct[]>(`${this.apiUrl}/products`)
-      .pipe(
-        catchError(this.handleError<IProduct[]>('getAllProducts'))
-      );
+    return this.genericApiService.getAll<IProduct[]>(this.route);
+    // return this.http.get<IProduct[]>(`${this.apiUrl}/products`)
+    //   .pipe(
+    //     catchError(this.handleError<IProduct[]>('getAllProducts'))
+    //   );
   }
 
   getProductById(id: number): Observable<IProduct> {
-    return this.http.get<IProduct>(`${this.apiUrl}/products/${id}`)
-      .pipe(
-        catchError(this.handleError<IProduct>('getProductById'))
-      );
+    // return this.http.get<IProduct>(`${this.apiUrl}/products/${id}`)
+    //   .pipe(
+    //     catchError(this.handleError<IProduct>('getProductById'))
+    //   );
+    return this.genericApiService.getById<IProduct>(this.route, id);
+  }
+
+  addProduct(product: IProduct): Observable<IProduct> {
+    return this.genericApiService.create<IProduct>(this.route, product);
+  }
+
+  updateProduct(id: number, product: IProduct): Observable<IProduct> {
+    return this.genericApiService.update<IProduct>(this.route, id, product);
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.genericApiService.delete(this.route, id);
   }
 
   getProductsByCatID(catID: number): Observable<IProduct[]> {
-    return this.http.get<IProduct[]>(`${this.apiUrl}/products?categoryID=${catID}`)
+    return this.http.get<IProduct[]>(`${environment.API_URL}/products?categoryID=${catID}`)
       .pipe(
         catchError(this.handleError<IProduct[]>('getProductsByCatID'))
       );
   }
 
-  addProduct(newPrd: IProduct): Observable<IProduct> {
-    return this.http.post<IProduct>(`${this.apiUrl}/products`, JSON.stringify(newPrd), httpOptions)
-      .pipe(
-        retry(3),
-        catchError(this.handleError<IProduct>('addProduct'))
-      );
-  }
-
-  // updateProduct(id: number, updatedPrd: IProduct) {
-  // }
-
-  // deleteProduct(id: number) {
+  // addProduct(newPrd: IProduct): Observable<IProduct> {
+  //   return this.http.post<IProduct>(`${this.apiUrl}/products`, JSON.stringify(newPrd), httpOptions)
+  //     .pipe(
+  //       retry(3),
+  //       catchError(this.handleError<IProduct>('addProduct'))
+  //     );
   // }
 
   private setHeader(key: string, value: string) {

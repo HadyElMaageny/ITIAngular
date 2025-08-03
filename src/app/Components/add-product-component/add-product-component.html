@@ -1,27 +1,95 @@
-<!--<div class="add-product-container">-->
-<!--  <button mat-raised-button-->
-<!--          color="primary"-->
-<!--          (click)="addProduct()"-->
-<!--          [disabled]="isLoading">-->
-<!--    <span *ngIf="!isLoading">Add Sample Product</span>-->
-<!--    <span *ngIf="isLoading">-->
-<!--      <mat-spinner diameter="20"></mat-spinner> Adding...-->
-<!--    </span>-->
-<!--  </button>-->
-<!--</div>-->
+<form #prdForm="ngForm" (ngSubmit)="onSubmit()" class="p-3">
+  <div class="mb-3">
+    <label for="prdName" class="form-label">Product Name</label>
+    <input
+      type="text"
+      id="prdName"
+      name="prdName"
+      class="form-control"
+      required
+      minlength="3"
+      [(ngModel)]="newProduct.name"
+      #prdNameInput="ngModel"
+      placeholder="Enter Product Name"
+    />
+    <div *ngIf="prdNameInput.invalid && prdNameInput.touched" class="text-danger">
+      <small *ngIf="prdNameInput.errors?.['required']">Name is required.</small>
+      <small *ngIf="prdNameInput.errors?.['minlength']">Name must be at least 3 characters long.</small>
+    </div>
+  </div>
 
-<form>
-  <div class="form-group">
-    <label for="prdName">Email address</label>
-    <input type="text" class="form-control" id="prdName" placeholder="Enter Product Name">
+  <div class="mb-3">
+    <label for="prdPrice" class="form-label">Product Price</label>
+    <input
+      type="number"
+      id="prdPrice"
+      name="prdPrice"
+      class="form-control"
+      [(ngModel)]="newProduct.price"
+      required
+      min="0"
+      placeholder="Enter Product Price"
+    />
   </div>
-  <div class="form-group">
-    <label for="prdPrice">Email address</label>
-    <input type="number" class="form-control" id="prdPrice" placeholder="Enter Product Price">
+
+  <div class="mb-3">
+    <label for="prdQty" class="form-label">Product Quantity</label>
+    <input
+      type="number"
+      id="prdQty"
+      name="prdQty"
+      class="form-control"
+      [(ngModel)]="newProduct.quantity"
+      required
+      min="0"
+      placeholder="Enter Product Quantity"
+    />
   </div>
-  <div class="form-group">
-    <label for="prdQty">Email address</label>
-    <input type="number" class="form-control" id="prdPrice" placeholder="Enter Product Price">
+
+  <div class="mb-3">
+    <label for="prdCat" class="form-label">Category</label>
+    <select
+      id="prdCat"
+      name="categoryID"
+      class="form-select"
+      [(ngModel)]="newProduct.categoryID"
+      required
+    >
+      <option [ngValue]="0" disabled>All</option>
+      <option *ngFor="let category of catList" [ngValue]="category.id">
+        {{ category.name }}
+      </option>
+    </select>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+
+  <div class="mb-3">
+    <label for="prdImg" class="form-label">Product Image URL</label>
+    <input
+      type="text"
+      id="prdImg"
+      name="imageUrl"
+      class="form-control"
+      [(ngModel)]="newProduct.imageUrl"
+      placeholder="Enter Image URL"
+    />
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary" [disabled]="prdForm.invalid || isLoading">
+      <span *ngIf="!isLoading">{{ receivedPrdId ? 'Update' : 'Add' }} Product</span>
+      <span *ngIf="isLoading">
+        <mat-spinner diameter="20"></mat-spinner> Processing...
+      </span>
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="router.navigate(['/products'])">
+      Cancel
+    </button>
+  </div>
 </form>
+
+<!-- Debug (remove in production) -->
+<div class="mt-3 text-danger">
+  <h5>Debug Data</h5>
+  <pre>{{ newProduct | json }}</pre>
+  <pre>{{ catList | json }}</pre>
+</div>

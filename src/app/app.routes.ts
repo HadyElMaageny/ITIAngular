@@ -9,6 +9,7 @@ import {MainLayout} from './Components/main-layout/main-layout';
 import {NotFound} from './Components/not-found/not-found';
 import {authGuard} from './Guards/auth-guard';
 import {AddProductComponent} from './Components/add-product-component/add-product-component';
+import {UserRegister} from './Components/user-register/user-register';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,7 @@ export const routes: Routes = [
         children: [
           {path: '', component: ProductListComponent},
           {path: 'add', component: AddProductComponent},
+          {path: 'add/:id', component: AddProductComponent},
           {path: ':id', component: ProductDetails},
         ],
       },
@@ -35,6 +37,7 @@ export const routes: Routes = [
 
       {path: 'login', component: UserLogin},
       {path: 'logout', component: UserLogin},
+      {path: 'register', component: UserRegister},
 
     ],
   },

@@ -1,31 +1,46 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, retry} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {APIResponseVm} from '../ViewModels/apiresponse-vm';
-import {Observable, retry, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {IProduct} from '../Models/IProduct';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    // Authorization: 'my-auth-token'
-  })
-};
-const apiUrl: string = environment.API_URL;
 
 @Injectable({
   providedIn: 'root'
 })
-export class GenericAPIHandler {
+export class GenericAPIService {
+  private readonly baseUrl = environment.API_URL;
 
+  constructor(private http: HttpClient) {
+  }
 
-  constructor(private http: HttpClient) { }
+  getAll<T>(route: string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${route}`).pipe(
+      retry(2),
+      catchError(this.handleError<T>('getAll'))
+    );
+  }
 
-  getAll(apiRoute: string): Observable<APIResponseVm> {
-    return this.http.get<APIResponseVm>(`${apiUrl}/${apiRoute}`).pipe(
-      retry(3),
-      catchError(this.handleError<APIResponseVm>('getAll ' + apiRoute))
+  getById<T>(route: string, id: number | string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${route}/${id}`).pipe(
+      catchError(this.handleError<T>('getById'))
+    );
+  }
+
+  create<T>(route: string, item: T): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}/${route}`, item).pipe(
+      catchError(this.handleError<T>('create'))
+    );
+  }
+
+  update<T>(route: string, id: number | string, item: T): Observable<T> {
+    return this.http.put<T>(`${this.baseUrl}/${route}/${id}`, item).pipe(
+      catchError(this.handleError<T>('update'))
+    );
+  }
+
+  delete(route: string, id: number | string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${route}/${id}`).pipe(
+      catchError(this.handleError<void>('delete'))
     );
   }
 

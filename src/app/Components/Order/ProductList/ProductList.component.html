@@ -2,65 +2,75 @@
 
 <table class="table table-striped">
   <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Price in USD</th>
-      <th scope="col">Price in EGP</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Image</th>
-      <th scope="col">Category ID</th>
-      <th scope="col">Needed Qty</th>
-      <th scope="col">Details</th>
-      <th scope="col">Add</th>
-    </tr>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Name</th>
+    <th scope="col">Price in USD</th>
+    <th scope="col">Price in EGP</th>
+    <th scope="col">Quantity</th>
+    <th scope="col">Image</th>
+    <th scope="col">Category ID</th>
+    <th scope="col">Needed Qty</th>
+    <th scope="col">Details</th>
+    <th scope="col">Add</th>
+    <th scope="col">Edit</th>
+    <th scope="col">Delete</th>
+
+  </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of prdListOfCat ;
+  <tr *ngFor="let product of prdListOfCat ;
      let i = index" [class.bg-warning]="+product.quantity < 3">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ product.name }}</td>
-      <td>{{ product.price | currency:'USD' }}</td>
-      <td>{{ product.price | USDToEGP:10 |currency:'EGP' }}</td>
-      <td>
-        <ng-container [ngSwitch]="product.quantity">
-          <div *ngSwitchCase="0" class="text-danger">Out of Stock</div>
-          <div *ngSwitchCase="1" class="text-warning">Only 1 left</div>
-          <div *ngSwitchCase="2" class="text-warning">Only 2 left</div>
-          <div *ngSwitchDefault>{{ product.quantity }}</div>
-        </ng-container>
-      </td>
-      <td>
-        <img
-          lightBox="red" defaultColor="grey"
-          [src]="product.imageUrl"
-          alt="{{ product.name }}"
-          class="img-thumbnail"
-        />
-      </td>
-      <td>{{ product.categoryID }}</td>
-      <td>
-        <div class="input-group" style="width: 150px;">
-          <button
-            class="btn btn-outline-danger"
-            (click)="qtyInput.value = ((+qtyInput.value > 0) ? (+qtyInput.value - 1).toString() : '0')">
-            -
-          </button>
-          <input #qtyInput type="number" value="0" class="form-control text-center" min="0" [max]="product.quantity" />
-          <button
-            class="btn btn-outline-success"
-            (click)="qtyInput.value = ((+qtyInput.value < product.quantity) ? (+qtyInput.value + 1).toString() : qtyInput.value)">
-            +
-          </button>
-        </div>
-      </td>
-      <td>
-        <button class="btn btn-primary" [routerLink]="['/products', product.id]" role="button">Details</button>
-      </td>
-      <td>
-        <button class="btn btn-primary" (click)="addToCart(product, qtyInput)">Add to Cart</button>
-      </td>
-    </tr>
+    <th scope="row">{{ i + 1 }}</th>
+    <td>{{ product.name }}</td>
+    <td>{{ product.price | currency:'USD' }}</td>
+    <td>{{ product.price | USDToEGP:10 |currency:'EGP' }}</td>
+    <td>
+      <ng-container [ngSwitch]="product.quantity">
+        <div *ngSwitchCase="0" class="text-danger">Out of Stock</div>
+        <div *ngSwitchCase="1" class="text-warning">Only 1 left</div>
+        <div *ngSwitchCase="2" class="text-warning">Only 2 left</div>
+        <div *ngSwitchDefault>{{ product.quantity }}</div>
+      </ng-container>
+    </td>
+    <td>
+      <img
+        lightBox="red" defaultColor="grey"
+        [src]="product.imageUrl"
+        alt="{{ product.name }}"
+        class="img-thumbnail"
+      />
+    </td>
+    <td>{{ product.categoryID }}</td>
+    <td>
+      <div class="input-group" style="width: 150px;">
+        <button
+          class="btn btn-outline-danger"
+          (click)="qtyInput.value = ((+qtyInput.value > 0) ? (+qtyInput.value - 1).toString() : '0')">
+          -
+        </button>
+        <input #qtyInput type="number" value="0" class="form-control text-center" min="0" [max]="product.quantity"/>
+        <button
+          class="btn btn-outline-success"
+          (click)="qtyInput.value = ((+qtyInput.value < product.quantity) ? (+qtyInput.value + 1).toString() : qtyInput.value)">
+          +
+        </button>
+      </div>
+    </td>
+    <td>
+      <button class="btn btn-primary" [routerLink]="['/products', product.id]" role="button">Details</button>
+    </td>
+    <td>
+      <button class="btn btn-primary" (click)="addToCart(product, qtyInput)">Add to Cart</button>
+    </td>
+    <td>
+      <button class="btn btn-secondary" [routerLink]="['/products/add', product.id]">Edit</button>
+    </td>
+    <td>
+      <button class="btn btn-danger" (click)="deleteProduct(product.id)">Delete</button>
+    </td>
+
+  </tr>
   </tbody>
 </table>
 <!-- <h3 class="text-danger">
