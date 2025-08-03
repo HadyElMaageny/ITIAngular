@@ -1,4 +1,4 @@
-<form [formGroup]="userRegisterForm">
+<form [formGroup]="userRegisterForm" class="mt-3">
   <div class="mb-3">
     <label for="fullName">Full Name</label>
     <input type="text" class="form-control" id="fullName" placeholder="Enter Full Name" formControlName="fullName">
@@ -10,13 +10,45 @@
   </div>
   <div class="mb-3">
     <label for="phoneNumber">Phone Number</label>
-    <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter Phone Number"
+    <input type="text" class="form-control" id="phoneNumber" placeholder="Enter Phone Number"
            formControlName="phoneNumber">
   </div>
+
+  <div formGroupName="address">
+    <div class="mb-3">
+      <label for="city">City</label>
+      <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City"
+             formControlName="city">
+    </div>
+    <div class="mb-3">
+      <label for="postalCode">Postal Code</label>
+      <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="Enter Postal Code"
+             formControlName="postalCode">
+    </div>
+    <div class="mb-3">
+      <label for="street">Street</label>
+      <input type="text" class="form-control" id="street" name="street" placeholder="Enter Your Street"
+             formControlName="street">
+    </div>
+  </div>
   <div class="mb-3">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+    <label for="Password">Password</label>
+    <input type="password" class="form-control" id="Password" name="password" placeholder="Password"
+           formControlName="password">
+  </div>
+  <div class="mb-3">
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+           placeholder="Confirm Password"
            formControlName="password">
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<!-- Debug (remove in production) -->
+<div class="mt-3 text-danger">
+  <h5>Debug Data</h5>
+  {{ userRegisterForm.value | json }}
+  <br>
+  {{ fullName?.errors | json }}
+</div>

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-user-register',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JsonPipe
   ],
   templateUrl: './user-register.html',
   styleUrl: './user-register.scss'
@@ -12,19 +14,23 @@ import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 export class UserRegister {
   userRegisterForm: FormGroup;
 
-  constructor() {
-    this.userRegisterForm = new FormGroup({
-      fullName: new FormControl(),
-      email: new FormControl(),
-      phoneNo: new FormControl(),
-      address: new FormGroup({
-        city: new FormControl(),
-        postalCode: new FormControl(),
-        street: new FormControl(),
+  constructor(private fb: FormBuilder) {
+    this.userRegisterForm = fb.group({
+      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      email: [''],
+      phoneNo: [''],
+      address: fb.group({
+        city: [''],
+        postalCode: [''],
+        street: [''],
       }),
-      password: new FormControl(),
-      confirmPassword: new FormControl(),
+      password: [''],
+      confirmPassword: [''],
     })
+  }
+
+  get fullName() {
+    return this.userRegisterForm.get('fullName');
   }
 
 }
