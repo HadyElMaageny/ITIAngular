@@ -1,57 +1,176 @@
-<form [formGroup]="userRegisterForm" class="mt-3">
+<form [formGroup]="userRegisterForm" class="mt-3" (ngSubmit)="submit()">
+
+  <!-- Full Name -->
   <div class="mb-3">
     <label for="fullName">Full Name</label>
-    <input type="text" class="form-control" id="fullName" placeholder="Enter Full Name" formControlName="fullName"
-           [class.is-valid]="fullName?.valid">
+    <input type="text" class="form-control" id="fullName"
+           placeholder="Enter Full Name" formControlName="fullName"
+           [class.is-valid]="fullName?.valid && fullName?.touched"
+           [class.is-invalid]="fullName?.invalid && fullName?.touched">
     <div class="text-danger" *ngIf="fullName?.touched && fullName?.invalid">
       <small *ngIf="fullName?.errors?.['required']">Full Name is required.</small>
-      <small *ngIf="fullName?.errors?.['minlength']">MinLength is 3</small>
+      <small *ngIf="fullName?.errors?.['minlength']">Full Name must be at least 3 characters.</small>
+      <small *ngIf="fullName?.errors?.['maxlength']">Full Name cannot exceed 50 characters.</small>
     </div>
   </div>
+
+  <!-- Email -->
   <div class="mb-3">
     <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-           placeholder="Enter email" formControlName="email">
-    <!-- Validation messages -->
+    <input type="email" class="form-control" id="exampleInputEmail1"
+           placeholder="Enter email" formControlName="email"
+           [class.is-valid]="email?.valid && email?.touched"
+           [class.is-invalid]="email?.invalid && email?.touched">
     <div class="text-danger" *ngIf="email?.touched && email?.invalid">
       <small *ngIf="email?.errors?.['required']">Email is required.</small>
       <small *ngIf="email?.errors?.['email']">Invalid email format.</small>
     </div>
   </div>
-  <div class="mb-3">
-    <label for="phoneNo">Phone Number</label>
-    <input type="text" class="form-control" id="phoneNo" placeholder="Enter Phone Number"
-           formControlName="phoneNo">
+
+  <!-- Phone Number -->
+  <!--  <div class="mb-3">-->
+  <!--    <label for="phoneNo">Phone Number</label>-->
+  <!--    <input type="text" class="form-control" id="phoneNo"-->
+  <!--           placeholder="Enter Phone Number" formControlName="phoneNo"-->
+  <!--           [class.is-valid]="phoneNo?.valid && phoneNo?.touched"-->
+  <!--           [class.is-invalid]="phoneNo?.invalid && phoneNo?.touched">-->
+  <!--    <div class="text-danger" *ngIf="phoneNo?.touched && phoneNo?.invalid">-->
+  <!--      <small *ngIf="phoneNo?.errors?.['required']">Phone Number is required.</small>-->
+  <!--      <small *ngIf="phoneNo?.errors?.['pattern']">Phone Number must be 10–15 digits only.</small>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <div formArrayName="phoneNumbers" class="mb-3">
+    <label class="form-label">Phone Numbers</label>
+    <div *ngFor="let control of phoneNumbers.controls; let i = index; trackBy: trackByIndex" class="input-group mb-2">
+      <input
+        [formControlName]="i"
+        type="text"
+        class="form-control"
+        placeholder="Enter phone number"
+        [class.is-invalid]="phoneControl(i).invalid && phoneControl(i).touched"
+      />
+      <!-- button group: add / remove -->
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="addPhone()"
+        [disabled]="!phoneControl(i).valid"
+        title="Add phone"
+        *ngIf="i === (phoneNumbers.length - 1)"
+      >
+        +
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        (click)="removePhone(i)"
+        [disabled]="phoneNumbers.length === 1"
+        title="Remove this phone"
+      >
+        −
+      </button>
+
+      <!-- validation messages -->
+      <div class="invalid-feedback" *ngIf="phoneControl(i).touched && phoneControl(i).invalid">
+        <div *ngIf="phoneControl(i).errors?.['required']">Phone is required.</div>
+        <div *ngIf="phoneControl(i).errors?.['pattern']">Phone must be 10–15 digits.</div>
+      </div>
+    </div>
   </div>
 
+  <!-- Address Group -->
   <div formGroupName="address">
+    <!-- City -->
     <div class="mb-3">
       <label for="city">City</label>
-      <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City"
-             formControlName="city">
+      <input type="text" class="form-control" id="city"
+             placeholder="Enter Your City" formControlName="city"
+             [class.is-invalid]="city?.invalid && city?.touched">
+      <div class="text-danger" *ngIf="city?.touched && city?.invalid">
+        <small *ngIf="city?.errors?.['required']">City is required.</small>
+      </div>
     </div>
+
+    <!-- Postal Code -->
     <div class="mb-3">
       <label for="postalCode">Postal Code</label>
-      <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="Enter Postal Code"
-             formControlName="postalCode">
+      <input type="text" class="form-control" id="postalCode"
+             placeholder="Enter Postal Code" formControlName="postalCode"
+             [class.is-invalid]="postalCode?.invalid && postalCode?.touched">
+      <div class="text-danger" *ngIf="postalCode?.touched && postalCode?.invalid">
+        <small *ngIf="postalCode?.errors?.['required']">Postal Code is required.</small>
+        <small *ngIf="postalCode?.errors?.['pattern']">Postal Code must be numeric (4–10 digits).</small>
+      </div>
     </div>
+
+    <!-- Street -->
     <div class="mb-3">
       <label for="street">Street</label>
-      <input type="text" class="form-control" id="street" name="street" placeholder="Enter Your Street"
-             formControlName="street">
+      <input type="text" class="form-control" id="street"
+             placeholder="Enter Your Street" formControlName="street"
+             [class.is-invalid]="street?.invalid && street?.touched">
+      <div class="text-danger" *ngIf="street?.touched && street?.invalid">
+        <small *ngIf="street?.errors?.['required']">Street is required.</small>
+      </div>
     </div>
   </div>
+
+  <!-- Password -->
   <div class="mb-3">
     <label for="Password">Password</label>
-    <input type="password" class="form-control" id="Password" name="password" placeholder="Password"
-           formControlName="password">
+    <input type="password" class="form-control" id="Password"
+           placeholder="Password" formControlName="password"
+           [class.is-invalid]="password?.invalid && password?.touched">
+    <div class="text-danger" *ngIf="password?.touched && password?.invalid">
+      <small *ngIf="password?.errors?.['required']">Password is required.</small>
+      <small *ngIf="password?.errors?.['minlength']">Minimum length is 6.</small>
+      <small *ngIf="password?.errors?.['pattern']">
+        Password must have at least 1 uppercase letter & 1 number.
+      </small>
+    </div>
   </div>
+
+  <!-- Confirm Password -->
   <div class="mb-3">
     <label for="confirmPassword">Confirm Password</label>
-    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-           placeholder="Confirm Password"
-           formControlName="password">
+    <input type="password" class="form-control" id="confirmPassword"
+           placeholder="Confirm Password" formControlName="confirmPassword"
+           [class.is-invalid]="confirmPassword?.invalid && confirmPassword?.touched">
+    <div class="text-danger"
+         *ngIf="confirmPassword?.touched && (confirmPassword?.invalid || userRegisterForm?.errors?.['passwordMismatch'])">
+      <small *ngIf="confirmPassword?.errors?.['required']">Confirm Password is required.</small>
+      <small *ngIf="userRegisterForm?.errors?.['passwordMismatch']">Passwords do not match.</small>
+    </div>
   </div>
+
+  <div class="mb-3">
+    <label class="form-label">How did you hear about us?</label>
+    <mat-radio-group formControlName="referral">
+      <mat-radio-button *ngFor="let opt of referralOptions" [value]="opt.value" class="me-3">
+        {{ opt.label }}
+      </mat-radio-button>
+    </mat-radio-group>
+    <div class="text-danger" *ngIf="referral?.touched && referral?.invalid">
+      <small *ngIf="referral?.errors?.['required']">Please select an option.</small>
+    </div>
+
+    <!-- referralOther: only visible when 'other' selected -->
+    <div *ngIf="referral?.value === 'other'" class="mt-2">
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Please specify</mat-label>
+        <input matInput formControlName="referralOther" placeholder="Type referral here" />
+      </mat-form-field>
+
+      <div class="text-danger" *ngIf="referralOther?.touched && referralOther?.invalid">
+        <small *ngIf="referralOther?.errors?.['required']">This field is required.</small>
+        <small *ngIf="referralOther?.errors?.['minlength']">Minimum 2 characters.</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
   <button type="submit" class="btn btn-primary" [disabled]="userRegisterForm.invalid">
     Submit
   </button>
@@ -62,5 +181,7 @@
   <h5>Debug Data</h5>
   {{ userRegisterForm.value | json }}
   <br>
-  {{ fullName?.errors | json }}
+  {{ userRegisterForm.errors | json }}
+  <br>
+  {{ referralOther?.errors | json }}
 </div>
