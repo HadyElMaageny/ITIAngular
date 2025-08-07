@@ -4,7 +4,7 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
+  ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
 } from "@angular/forms";
 import {CommonModule, JsonPipe} from '@angular/common';
@@ -52,7 +52,8 @@ export class UserRegister implements OnInit {
         '',
         [
           Validators.required,
-          Validators.email
+          Validators.email,
+          this.existEmailValidator()
         ]
       ],
       phoneNumbers: this.fb.array([this.createPhoneControl()]),
@@ -200,6 +201,18 @@ export class UserRegister implements OnInit {
     let userModel = this.userRegisterForm.value as IUser;
     // Call API, send UserModel
     console.log(userModel);
+  }
+
+  existEmailValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const emailVal = control.value;
+
+      if (!emailVal) return null;
+
+      const validationError = {"EmailNotValid": {value: emailVal}};
+
+      return emailVal.includes('@') ? null : validationError;
+    }
   }
 
 

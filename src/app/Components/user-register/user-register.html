@@ -24,21 +24,13 @@
     <div class="text-danger" *ngIf="email?.touched && email?.invalid">
       <small *ngIf="email?.errors?.['required']">Email is required.</small>
       <small *ngIf="email?.errors?.['email']">Invalid email format.</small>
+      <small *ngIf="email?.errors?.['EmailNotValid']">
+        Email must contain &#64; ,
+        <b>{{ email?.errors?.['EmailNotValid'].value }}</b>
+      </small>
+
     </div>
   </div>
-
-  <!-- Phone Number -->
-  <!--  <div class="mb-3">-->
-  <!--    <label for="phoneNo">Phone Number</label>-->
-  <!--    <input type="text" class="form-control" id="phoneNo"-->
-  <!--           placeholder="Enter Phone Number" formControlName="phoneNo"-->
-  <!--           [class.is-valid]="phoneNo?.valid && phoneNo?.touched"-->
-  <!--           [class.is-invalid]="phoneNo?.invalid && phoneNo?.touched">-->
-  <!--    <div class="text-danger" *ngIf="phoneNo?.touched && phoneNo?.invalid">-->
-  <!--      <small *ngIf="phoneNo?.errors?.['required']">Phone Number is required.</small>-->
-  <!--      <small *ngIf="phoneNo?.errors?.['pattern']">Phone Number must be 10–15 digits only.</small>-->
-  <!--    </div>-->
-  <!--  </div>-->
 
   <div formArrayName="phoneNumbers" class="mb-3">
     <label class="form-label">Phone Numbers</label>
@@ -160,7 +152,7 @@
     <div *ngIf="referral?.value === 'other'" class="mt-2">
       <mat-form-field appearance="outline" style="width:100%">
         <mat-label>Please specify</mat-label>
-        <input matInput formControlName="referralOther" placeholder="Type referral here" />
+        <input matInput formControlName="referralOther" placeholder="Type referral here"/>
       </mat-form-field>
 
       <div class="text-danger" *ngIf="referralOther?.touched && referralOther?.invalid">
@@ -182,6 +174,5 @@
   {{ userRegisterForm.value | json }}
   <br>
   {{ userRegisterForm.errors | json }}
-  <br>
-  {{ referralOther?.errors | json }}
+  <pre>{{ email?.errors | json }}</pre>
 </div>
