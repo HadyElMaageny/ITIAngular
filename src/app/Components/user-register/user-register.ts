@@ -4,7 +4,7 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule, ValidationErrors, ValidatorFn,
+  ReactiveFormsModule,
   Validators
 } from "@angular/forms";
 import {CommonModule, JsonPipe} from '@angular/common';
@@ -12,6 +12,8 @@ import {IUser} from '../../Models/iuser';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {emailExistsValidator} from '../../../CustomValidators/emailExistsValidator';
+import {passwordMatchValidator} from '../../../CustomValidators/passwordMatchValidator';
 
 @Component({
   selector: 'app-user-register',
@@ -27,6 +29,7 @@ import {MatInput} from '@angular/material/input';
   styleUrl: './user-register.scss'
 })
 export class UserRegister implements OnInit {
+  existsUserEmails: string[] = [];
   userRegisterForm!: FormGroup;
   referralOptions = [
     {label: 'Friend', value: 'friend'},
@@ -39,6 +42,8 @@ export class UserRegister implements OnInit {
   }
 
   ngOnInit(): void {
+    //call API to fill exist emails
+    this.existsUserEmails = ["aa@aa.com", "bb@bb.com", "cc@cc.com"]
     this.userRegisterForm = this.fb.group({
       fullName: [
         '',
@@ -53,8 +58,8 @@ export class UserRegister implements OnInit {
         [
           Validators.required,
           Validators.email,
-          this.existEmailValidator()
-        ]
+        ],
+        [emailExistsValidator(this.existsUserEmails)]
       ],
       phoneNumbers: this.fb.array([this.createPhoneControl()]),
       address: this.fb.group({
@@ -98,7 +103,7 @@ export class UserRegister implements OnInit {
       referral: ['', Validators.required],      // selected radio value
       referralOther: ['']
     }, {
-      validators: this.passwordMatchValidator // custom group-level validator
+      validators: passwordMatchValidator() // custom group-level validator
     });
 
     this.referral!.valueChanges.subscribe(value => {
@@ -191,30 +196,11 @@ export class UserRegister implements OnInit {
     return this.userRegisterForm.get('referralOther');
   }
 
-  passwordMatchValidator(formGroup: FormGroup) {
-    const password = formGroup.get('password')?.value;
-    const confirmPassword = formGroup.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : {passwordMismatch: true};
-  }
-
   submit() {
     let userModel = this.userRegisterForm.value as IUser;
     // Call API, send UserModel
     console.log(userModel);
   }
-
-  existEmailValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const emailVal = control.value;
-
-      if (!emailVal) return null;
-
-      const validationError = {"EmailNotValid": {value: emailVal}};
-
-      return emailVal.includes('@') ? null : validationError;
-    }
-  }
-
 
   protected readonly name = name;
 }

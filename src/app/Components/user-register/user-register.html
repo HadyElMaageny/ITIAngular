@@ -24,11 +24,8 @@
     <div class="text-danger" *ngIf="email?.touched && email?.invalid">
       <small *ngIf="email?.errors?.['required']">Email is required.</small>
       <small *ngIf="email?.errors?.['email']">Invalid email format.</small>
-      <small *ngIf="email?.errors?.['EmailNotValid']">
-        Email must contain &#64; ,
-        <b>{{ email?.errors?.['EmailNotValid'].value }}</b>
-      </small>
-
+      <small *ngIf="email?.pending">Checking email availability...</small>
+      <small *ngIf="email?.errors?.['emailExists']">Email already in use.</small>
     </div>
   </div>
 
@@ -133,7 +130,8 @@
     <div class="text-danger"
          *ngIf="confirmPassword?.touched && (confirmPassword?.invalid || userRegisterForm?.errors?.['passwordMismatch'])">
       <small *ngIf="confirmPassword?.errors?.['required']">Confirm Password is required.</small>
-      <small *ngIf="userRegisterForm?.errors?.['passwordMismatch']">Passwords do not match.</small>
+      <small *ngIf="userRegisterForm?.errors?.['passwordMismatch'] && password?.value && confirmPassword?.value">Passwords
+        do not match.</small>
     </div>
   </div>
 
